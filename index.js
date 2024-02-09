@@ -1,6 +1,23 @@
 const buttonColors= ["red", "blue", "green", "yellow"];
 const gamePattern= [];
 console.log(gamePattern);
+userClickedPattern= [];
+
+
+$(".btn").click(function() {
+    let userChosenColor= $(this).attr("id");
+    userClickedPattern.push(userChosenColor);
+    console.log(userClickedPattern);
+    const audio = new Audio("./sounds/" + userChosenColor + ".mp3");
+    audio.play();
+});
+
+
+function playSound(name) {
+    const audio = new Audio("./sounds/" + name + ".mp3");
+    audio.play();
+    
+}
 
 
 function nextSequence() {
@@ -13,12 +30,9 @@ function nextSequence() {
     gamePattern.push(randomChosenColor);
 
     $("#" + randomChosenColor).fadeIn(100).fadeOut(100).fadeIn(100);
-    
-    const audio = new Audio("./sounds/" + randomChosenColor + ".mp3");
-    audio.play();
 
+    playSound();
     
 
 };
 
-nextSequence();
