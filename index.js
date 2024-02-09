@@ -1,13 +1,26 @@
-const buttonColors= ["red", "blue", "green", "yellow"];
-const gamePattern= [];
+const buttonColors = ["red", "blue", "green", "yellow"];
+const gamePattern = [];
 console.log(gamePattern);
-userClickedPattern= [];
-let level= 0;
-const started= false;
+userClickedPattern = [];
+let level = 0;
+const started = false;
+
+
+// kepypress to start the game
+$(document).keypress(function () {
+    if (!started) {
+        $("#level-title").text("Level " + level);
+        nextSequence();
+        started = true;
+    }
+
+
+})
+
 
 // button clicks 
-$(".btn").click(function() {
-    let userChosenColor= $(this).attr("id");
+$(".btn").click(function () {
+    let userChosenColor = $(this).attr("id");
     userClickedPattern.push(userChosenColor);
     console.log(userClickedPattern);
 
@@ -20,7 +33,7 @@ $(".btn").click(function() {
 
 function animatePress(currentColor) {
     $("#" + currentColor).addClass("pressed");
-    setTimeout(function() {
+    setTimeout(function () {
         $("#" + currentColor).removeClass("pressed");
     }, 100);
 };
@@ -28,14 +41,14 @@ function animatePress(currentColor) {
 
 
 function nextSequence() {
-    userClickedPattern= [];
+    userClickedPattern = [];
     level++;
     $("#level-title").text("Level " + level);
 
-    const randomNum= Math.ceil(Math.random() * 4);
+    const randomNum = Math.ceil(Math.random() * 4);
     console.log(randomNum);
 
-    const randomChosenColor= buttonColors[randomNum];
+    const randomChosenColor = buttonColors[randomNum];
     console.log(randomChosenColor);
 
     gamePattern.push(randomChosenColor);
@@ -43,7 +56,7 @@ function nextSequence() {
     $("#" + randomChosenColor).fadeIn(100).fadeOut(100).fadeIn(100);
 
     playSound(randomChosenColor);
-    
+
 
 };
 
@@ -53,33 +66,38 @@ function checkAnswer(currentLevel) {
     }
 
     if (userClickedPattern.length === gamePattern.length) {
-        setTimeout(function() {
+        setTimeout(function () {
             nextSequence();
         }, 1000);
- 
+
     } else {
         console.log("Wrong.");
+
+        playSound("wrong");
+
+        $("body").addClass("game-over");
+        $("#level-title").text("Game Over, Press Any Key to Restart");
+
+        setTimeout(function() {
+            $("body").removeClass("game-over");
+        }, 200);
+
+        startOver();
     }
 
 }
-
-
-
-$(document).keypress(function() {
-   if (!started) {
-    $("#level-title").text("Level " + level);
-    nextSequence();
-    started= true;
-   }
-
-
-})
 
 
 // plays sounds when buttons clicked
 function playSound(name) {
     const audio = new Audio("./sounds/" + name + ".mp3");
     audio.play();
-    
+
 };
 
+
+function startOver() {
+    level= 0;
+    gamePattern= [];
+    started= false;
+}
